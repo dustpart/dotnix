@@ -1,8 +1,9 @@
 {
-  description = "Nixos config flake";
+  description = "Nini's config flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    
     aagl.url = "github:ezKEa/aagl-gtk-on-nix";
     aagl.inputs.nixpkgs.follows = "nixpkgs"; # Name of nixpkgs input you want to use
 
@@ -19,14 +20,15 @@
     in
     {
     
-      nixosConfigurations.default = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.chalknix = nixpkgs.lib.nixosSystem {
           specialArgs = {inherit inputs;};
           modules = [ 
-            ./configuration.nix
+            ./hosts/chalknix/configuration.nix
             {
               imports = [ aagl.nixosModules.default ];
               nix.settings = aagl.nixConfig;
               programs.anime-game-launcher.enable = true;
+              programs.honkers-railway-launcher.enable = true;
             }
             inputs.home-manager.nixosModules.default
           ];

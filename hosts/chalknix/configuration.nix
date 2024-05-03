@@ -33,11 +33,13 @@ in
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  #Apparently this should work apps being slow
+  boot.kernelParams = [ "intel_pstate=active" ];
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  networking.hostName = "nixos"; # Define your hostname.
+  
+  networking.hostName = "chalknix"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -46,6 +48,10 @@ in
 
   # Enable networking
   networking.networkmanager.enable = true;
+
+  # Disable IPv6
+  networking.enableIPv6 = false;
+  #boot.kernelParams = ["ipv6.disable=1"];
 
   # Set your time zone.
   time.timeZone = "America/Argentina/Cordoba";
@@ -93,7 +99,9 @@ in
     isNormalUser = true;
     description = "zektak";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-    packages = with pkgs; [];
+    packages = with pkgs; [
+      git
+    ];
   };
 
   home-manager = {
@@ -105,6 +113,12 @@ in
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  
+
+  environment.sessionVariables = {
+    FLAKE = "/etc/nixos";
+  };
+
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -113,6 +127,8 @@ in
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
       })
     )
+    pkgs.cachix
+    nh
     ani-cli
     floorp
     xwaylandvideobridge
