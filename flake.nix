@@ -36,7 +36,7 @@
       nixosConfigurations.nzinni = nixpkgs.lib.nixosSystem {
           specialArgs = {inherit inputs;};
           modules = [
-            ./hosts/work/configuration.nix
+            ./hosts/nzinni/configuration.nix
             inputs.home-manager.nixosModules.default
           ];
         };
