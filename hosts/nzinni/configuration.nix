@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./../../modules/bluetooth.nix
+      ./../../modules/laptop_scaling.nix
     ];
 
   # Bootloader.
@@ -105,8 +106,11 @@
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
+  libreoffice-qt
+  hunspell
   pkgs.nh
   git
+  pkgs.jetbrains.rider
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
