@@ -91,6 +91,8 @@
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       kate
+      bottles
+      tidal-hifi
     #  thunderbird
     ];
   };
@@ -106,13 +108,20 @@
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
-  libreoffice-qt
-  hunspell
-  pkgs.nh
-  git
-  pkgs.jetbrains.rider
+  #  pkgs.sony-headphones-client
+    spotify
+    libreoffice-qt
+    hunspell
+    hunspellDicts.es_AR
+    pkgs.nh
+    git
+    pkgs.jetbrains.rider
   ];
-
+  
+  services.mopidy = {
+    enable = true;
+    extensionPackages = [ pkgs.mopidy-notify pkgs.mopidy-bandcamp pkgs.mopidy-mpd pkgs.mopidy-iris];
+  };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
