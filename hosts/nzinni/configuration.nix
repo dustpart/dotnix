@@ -12,6 +12,7 @@
       ./../../modules/laptop_scaling.nix
       ./../../modules/intel_d.nix
       ./../../modules/virtualization.nix
+      ./../../cachix.nix
     ];
 
   # Bootloader.
@@ -95,6 +96,7 @@
     description = "Nicolás Zinni";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
+      pkgs.cachix
       kate
       bottles
       tidal-hifi
@@ -108,7 +110,13 @@
 
   # Install firefox.
   programs.firefox.enable = true;
-
+  
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+  };
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -132,9 +140,9 @@
     extensionPackages = [ pkgs.mopidy-notify pkgs.mopidy-bandcamp pkgs.mopidy-mpd pkgs.mopidy-iris];
   };
 
-  services.n8n = {
-    enable = true;
-  };
+  #services.n8n = {
+   # enable = true;
+  #};
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
