@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports =
@@ -14,6 +14,14 @@
       ./../../modules/virtualization.nix
       ./../../cachix.nix
     ];
+
+  #security.wrappers.ubridge = {
+  #  source = "${pkgs.ubridge}/bin/ubridge";
+  #  capabilities = "cap_net_admin,cap_net_raw=ep";
+  #  owner = "root";
+  #  group = "root";  # or whatever group your user belongs to
+  #};
+
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -69,7 +77,7 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
+  #sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -96,15 +104,27 @@
     description = "Nicolás Zinni";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
+      rustdesk
+      direnv
+      mysql-workbench
       pkgs.cachix
-      kate
+      kdePackages.kate
       bottles
       tidal-hifi
       kalker
       calcure
       ipcalc
       speedcrunch
-    #  thunderbird
+      bottles
+      gns3-gui
+      inputs.zen-browser.packages.${pkgs.system}.default
+      neovim
+      #ciscoPacketTracer8
+      ghostty
+      ripgrep
+      fd
+      
+     #  thunderbird
     ];
   };
 
@@ -133,12 +153,50 @@
     pkgs.nh
     git
     pkgs.jetbrains.rider
+    input-leap
+    emacs  # Or emacsGit for latest
+    ripgrep
+    fd
+    (writeShellScriptBin "doom" ''
+      export PATH="${lib.makeBinPath [ git ripgrep fd ]}:$PATH"
+      exec $HOME/.emacs.d/bin/doom "$@"
+    '')
+    #gomod2nix
+    #gns3-server
+    #libvirt
+    #ubridge
+  ];
+  
+  #programs.zsh.enable = true;  # Needed if using zsh for DOOMDIR
+  services.emacs.enable = true; 
+  environment.variables = {
+    EMACSLOADPATH = "$HOME/.emacs.d/core:${pkgs.emacs29}/share/emacs/site-lisp";
+    DOOMDIR = "$HOME/.doom.d";
+  };
+  
+  fonts.packages = with pkgs; [
+    pkgs.nerd-fonts.fira-code
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.nerd-fonts.hack
   ];
   
   services.mopidy = {
     enable = true;
     extensionPackages = [ pkgs.mopidy-notify pkgs.mopidy-bandcamp pkgs.mopidy-mpd pkgs.mopidy-iris];
   };
+  
+  services.tailscale.enable = true;
+  
+  #services.gns3-server = {
+    #enable = true;
+    #dynamips.enable = true;
+    #ubridge.enable = true;
+    #vpcs.enable = true;
+    #settings = {
+    #  host = "127.0.0.1";
+    #  port = 3080;
+    #};
+ # };
 
   #services.n8n = {
    # enable = true;
