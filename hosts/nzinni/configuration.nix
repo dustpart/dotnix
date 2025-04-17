@@ -14,6 +14,7 @@
       ./../../modules/virtualization.nix
       ./../../cachix.nix
       inputs.home-manager.nixosModules.default
+      #./home.nix
     ];
 
   #security.wrappers.ubridge = {
@@ -68,7 +69,7 @@
    # enable = true;
     #xwayland.enable = true;
   #};
-  programs.niri.enable = true;
+  #programs.niri.enable = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   # Configure keymap in X11
   services.xserver = {
@@ -85,6 +86,7 @@
   # Enable sound with pipewire.
   #sound.enable = true;
   hardware.pulseaudio.enable = false;
+  security.pam.services.hyprlock.text = "auth include login";
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;

@@ -1,6 +1,7 @@
-{ config, pkgs, ... }:
+{ inputs, config, pkgs, ... }:
 
 {
+  imports = [ inputs.niri.homeModules.niri ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "nzinni";
@@ -35,7 +36,60 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
-
+  services.mako = {
+    enable = true;
+  };
+  programs.hyprlock = {
+    enable = true;
+    settings = {
+      general = {
+        disable_loading_bar = true;
+        immediate_render = true;
+        hide_cursor = false;
+      };
+      background = [
+        {
+          monitor = "";
+          path = "~/Downloads/WALLPAPERS/SPIDERVERSE/greenish/SPDRVRS-5.png";
+          blur_passes = 3;
+          blur_size = 12;
+          noise = "0.1";
+          contrast = "1.3";
+          brightness = "0.2";
+          vibrancy = "0.5";
+          vibrancy_darkness = "0.3";
+        }
+      ];
+    };
+  };
+  programs.niri = {
+    enable = true; 
+    settings = {
+      binds = {
+        "XF86AudioRaiseVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+"];
+        "XF86AudioLowerVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"];
+        "Mod+D".action.spawn = "fuzzel";
+        "Mod+Enter".action.spawn = "ghostty";
+        "Mod+1".action.focus-workspace = 1;
+      };
+     # spawn-at-startup = [
+    #    {command = ["swww-daemon"];}
+   #     {command = ["eww" "daemon"];}
+  #      {command = ["eww" "open" "bar"];}
+ #       {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
+#        {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];} 
+#      ];
+      outputs = {
+        "eDP-1" = {
+          scale = 1.0;
+          position = {
+            x = 0;
+            y = 0;
+          };
+        };
+      };  
+    };
+  };
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
