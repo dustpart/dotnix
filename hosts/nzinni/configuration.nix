@@ -13,6 +13,7 @@
       ./../../modules/intel_d.nix
       ./../../modules/virtualization.nix
       ./../../cachix.nix
+      inputs.home-manager.nixosModules.default
     ];
 
   #security.wrappers.ubridge = {
@@ -63,7 +64,12 @@
   # Enable the KDE Plasma Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
-
+  #programs.hyprland = {
+   # enable = true;
+    #xwayland.enable = true;
+  #};
+  programs.niri.enable = true;
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
   # Configure keymap in X11
   services.xserver = {
     layout = "latam";
@@ -119,15 +125,18 @@
       gns3-gui
       inputs.zen-browser.packages.${pkgs.system}.default
       neovim
+      rustup
       #ciscoPacketTracer8
       ghostty
-      ripgrep
-      fd
-      
      #  thunderbird
     ];
   };
-
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    users = {
+      "nzinni" = import ./home.nix;
+    };
+  };
   # Install firefox.
   programs.firefox.enable = true;
   
@@ -157,10 +166,20 @@
     emacs  # Or emacsGit for latest
     ripgrep
     fd
-    (writeShellScriptBin "doom" ''
-      export PATH="${lib.makeBinPath [ git ripgrep fd ]}:$PATH"
-      exec $HOME/.emacs.d/bin/doom "$@"
-    '')
+    gcc
+    mako
+    eww
+    swww
+    fuzzel
+    clipse
+    cliphist
+    yazi
+    fzf
+    p7zip
+    imagemagick
+    zoxide
+    ffmpeg
+    networkmanagerapplet
     #gomod2nix
     #gns3-server
     #libvirt
@@ -169,17 +188,21 @@
   
   #programs.zsh.enable = true;  # Needed if using zsh for DOOMDIR
   services.emacs.enable = true; 
-  environment.variables = {
-    EMACSLOADPATH = "$HOME/.emacs.d/core:${pkgs.emacs29}/share/emacs/site-lisp";
-    DOOMDIR = "$HOME/.doom.d";
-  };
   
   fonts.packages = with pkgs; [
     pkgs.nerd-fonts.fira-code
     pkgs.nerd-fonts.jetbrains-mono
     pkgs.nerd-fonts.hack
-  ];
-  
+    pkgs.nerd-fonts.symbols-only
+    pkgs.nerd-fonts.sauce-code-pro
+    pkgs.nerd-fonts.noto
+    pkgs.nerd-fonts.roboto-mono
+    pkgs.nerd-fonts.iosevka
+    pkgs.font-awesome
+    pkgs.comic-mono
+    pkgs.icomoon-feather
+  ]; 
+
   services.mopidy = {
     enable = true;
     extensionPackages = [ pkgs.mopidy-notify pkgs.mopidy-bandcamp pkgs.mopidy-mpd pkgs.mopidy-iris];
