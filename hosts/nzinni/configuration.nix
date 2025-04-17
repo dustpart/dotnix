@@ -13,7 +13,7 @@
       ./../../modules/intel_d.nix
       ./../../modules/virtualization.nix
       ./../../cachix.nix
-      inputs.home-manager.nixosModules.default
+      #inputs.home-manager.nixosModules.default
       #./home.nix
     ];
 
@@ -69,7 +69,6 @@
    # enable = true;
     #xwayland.enable = true;
   #};
-  #programs.niri.enable = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   # Configure keymap in X11
   services.xserver = {
