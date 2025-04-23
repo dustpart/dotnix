@@ -1,7 +1,7 @@
 { inputs, config, pkgs, ... }:
 
 {
-  imports = [ inputs.niri.homeModules.niri ];
+  imports = [ inputs.ags.homeManagerModules.default ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "nzinni";
@@ -22,7 +22,8 @@
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
-
+    pkgs.iwgtk
+    inputs.ags.packages.${pkgs.system}.io
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
@@ -39,6 +40,20 @@
   services.mako = {
     enable = true;
   };
+
+  programs.ags = {
+    enable = true;
+
+    # symlink to ~/.config/ags
+    configDir = ../../ags;
+
+    # additional packages to add to gjs's runtime
+    extraPackages = with pkgs; [
+      inputs.ags.packages.${pkgs.system}.battery
+      fzf
+    ];
+  };  
+
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -50,7 +65,7 @@
       background = [
         {
           monitor = "";
-          path = "~/Downloads/WALLPAPERS/SPIDERVERSE/greenish/SPDRVRS-5.png";
+          path = "/home/nzinni/Imágenes/wallpaper.png";
           blur_passes = 3;
           blur_size = 12;
           noise = "0.1";
@@ -62,23 +77,33 @@
       ];
     };
   };
-  programs.niri = {
-    enable = true; 
+  programs.niri = { 
     settings = {
-      binds = {
-        "XF86AudioRaiseVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+"];
-        "XF86AudioLowerVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"];
-        "Mod+D".action.spawn = "fuzzel";
-        "Mod+Enter".action.spawn = "ghostty";
-        "Mod+1".action.focus-workspace = 1;
+      environment = {
+        QT_QPA_PLATFORM = "wayland";
+        DISPLAY = ":12";
+    };
+      binds = with config.lib.niri.actions;{
+        "XF86AudioRaiseVolume".action = spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+";
+        "XF86AudioLowerVolume".action = spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-";
+        "XF86MonBrightnessUp".action = spawn "brightnessctl" "s" "+5%";
+        "XF86MonBrightnessDown".action = spawn "brightnessctl" "s" "5%-";
+        "Mod+D".action = spawn "fuzzel";
+        "Mod+Return".action = spawn "ghostty";
+        "Mod+1".action = focus-workspace 1;
+        "Mod+Shift+E".action = quit { skip-confirmation = true; };
+        "Mod+Shift+F".action = toggle-window-floating;
+        "Mod+Q".action = close-window; 
       };
-     # spawn-at-startup = [
-    #    {command = ["swww-daemon"];}
-   #     {command = ["eww" "daemon"];}
-  #      {command = ["eww" "open" "bar"];}
- #       {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
-#        {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];} 
-#      ];
+      spawn-at-startup = [
+        {command = ["swww-daemon"];}
+        {command = ["swww" "img" "/home/nzinni/Imágenes/wallpaper.png"];}
+        {command = ["xwayland-satellite" ":12"];}
+        {command = ["eww" "daemon"];}
+        {command = ["eww" "open" "bar"];}
+        {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
+        {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];} 
+      ];
       outputs = {
         "eDP-1" = {
           scale = 1.0;
@@ -86,6 +111,26 @@
             x = 0;
             y = 0;
           };
+        };
+      };
+      input = {
+        keyboard = {
+          xkb = {
+              layout = "latam";
+              variant = "";
+          };
+        };
+        touchpad = {
+          click-method = "button-areas";
+          dwt = true;
+          dwtp = true;
+          natural-scroll = true;
+          scroll-method = "two-finger";
+          tap = true;
+          tap-button-map = "left-right-middle";
+          middle-emulation = true;
+          accel-profile = "adaptive";
+          # scroll-factor = 0.2;
         };
       };  
     };
@@ -122,8 +167,15 @@
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
+    #DISPLAY = ":12";
   };
-
+  programs.bash = {
+    #enable = true;
+    sessionVariables = {
+      DISPLAY = ":12";
+      XKB_DEFAULT_LAYOUT = "latam";
+    };
+  };
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 }

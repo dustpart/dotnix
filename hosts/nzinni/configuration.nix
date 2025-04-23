@@ -13,8 +13,8 @@
       ./../../modules/intel_d.nix
       ./../../modules/virtualization.nix
       ./../../cachix.nix
-      #inputs.home-manager.nixosModules.default
-      #./home.nix
+      inputs.home-manager.nixosModules.default
+      inputs.niri.nixosModules.niri      
     ];
 
   #security.wrappers.ubridge = {
@@ -23,7 +23,7 @@
   #  owner = "root";
   #  group = "root";  # or whatever group your user belongs to
   #};
-
+  #nixpkgs.overlays = [ inputs.niri.overlays.niri ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -63,17 +63,19 @@
   services.xserver.enable = true;
 
   # Enable the KDE Plasma Desktop Environment.
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
-  #programs.hyprland = {
-   # enable = true;
-    #xwayland.enable = true;
-  #};
+  services.displayManager.sddm.enable = true;
+  services.xserver.desktopManager.plasma6.enable = true;
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+  programs.niri.enable = true;
+  programs.niri.package = pkgs.niri;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   # Configure keymap in X11
   services.xserver = {
-    layout = "latam";
-    xkbVariant = "";
+    xkb.layout = "latam";
+    xkb.variant = "";
   };
 
   # Configure console keymap
@@ -84,7 +86,7 @@
 
   # Enable sound with pipewire.
   #sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.pam.services.hyprlock.text = "auth include login";
   security.rtkit.enable = true;
   services.pipewire = {
@@ -181,6 +183,9 @@
     zoxide
     ffmpeg
     networkmanagerapplet
+    iwd
+    brightnessctl
+    xwayland-satellite
     #gomod2nix
     #gns3-server
     #libvirt

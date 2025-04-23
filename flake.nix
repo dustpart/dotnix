@@ -11,6 +11,7 @@
     aagl.inputs.nixpkgs.follows = "nixpkgs"; # Name of nixpkgs input you want to use
     zen-browser.url = "github:youwen5/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
+    ags.url = "github:aylur/ags";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -43,14 +44,14 @@
           modules = [
             ./hosts/nzinni/configuration.nix
             inputs.home-manager.nixosModules.default
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.nzinni = ./hosts/nzinni/home.nix;
+            #{
+             # home-manager.useGlobalPkgs = true;
+             # home-manager.useUserPackages = true;
+             # home-manager.users.nzinni = ./hosts/nzinni/home.nix;
 
               # Optionally, use home-manager.extraSpecialArgs to pass
               # arguments to home.nix
-            }
+            #}
           ];
         };
     };
