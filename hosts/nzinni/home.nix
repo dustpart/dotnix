@@ -45,7 +45,7 @@
     enable = true;
 
     # symlink to ~/.config/ags
-    configDir = ../../ags;
+    configDir = ../../modules/ags;
 
     # additional packages to add to gjs's runtime
     extraPackages = with pkgs; [
