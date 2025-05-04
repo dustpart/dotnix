@@ -129,6 +129,7 @@
       inputs.zen-browser.packages.${pkgs.system}.default
       neovim
       rustup
+      rust-analyzer
       #ciscoPacketTracer8
       ghostty
      #  thunderbird
@@ -169,6 +170,10 @@
     emacs  # Or emacsGit for latest
     ripgrep
     fd
+    inetutils
+    cmake
+    openssl
+    pkg-config
     gcc
     mako
     eww
@@ -186,6 +191,7 @@
     iwd
     brightnessctl
     xwayland-satellite
+    godot_4
     #gomod2nix
     #gns3-server
     #libvirt

@@ -50,6 +50,9 @@
     # additional packages to add to gjs's runtime
     extraPackages = with pkgs; [
       inputs.ags.packages.${pkgs.system}.battery
+      inputs.ags.packages.${pkgs.system}.network
+      inputs.ags.packages.${pkgs.system}.wireplumber
+      #inputs.ags.packages.${pkgs.system}.
       fzf
     ];
   };  
@@ -88,11 +91,13 @@
         "XF86AudioLowerVolume".action = spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-";
         "XF86MonBrightnessUp".action = spawn "brightnessctl" "s" "+5%";
         "XF86MonBrightnessDown".action = spawn "brightnessctl" "s" "5%-";
+        "Print".action = spawn "grim" "-g" "$(slurp)" "-" "|" "swappy" "-f" "-";
         "Mod+D".action = spawn "fuzzel";
         "Mod+Return".action = spawn "ghostty";
         "Mod+1".action = focus-workspace 1;
         "Mod+Shift+E".action = quit { skip-confirmation = true; };
         "Mod+Shift+F".action = toggle-window-floating;
+        "Mod+Ctrl+F".action = fullscreen-window;
         "Mod+Q".action = close-window; 
       };
       spawn-at-startup = [
