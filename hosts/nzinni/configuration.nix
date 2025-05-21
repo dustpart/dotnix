@@ -32,7 +32,7 @@
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
+  programs.coolercontrol.enable = true;
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -63,12 +63,15 @@
   services.xserver.enable = true;
 
   # Enable the KDE Plasma Desktop Environment.
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "nzinni";
   services.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma6.enable = true;
+  services.desktopManager.plasma6.enable = true;
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
   };
+  programs.maomaowm.enable = true;
   programs.niri.enable = true;
   programs.niri.package = pkgs.niri;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
@@ -105,15 +108,23 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
  
-   virtualisation.docker.enable = true;
-
+   virtualisation = { 
+     docker.enable = true;
+     virtualbox.host = {
+       enable = false;
+       #enableKvm = true;
+       enableExtensionPack = true;
+       enableWebService = true;
+     };
+   };
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.nzinni = {
     isNormalUser = true;
     description = "Nicolás Zinni";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
-      rustdesk
+      #rustdesk
+      caido
       direnv
       mysql-workbench
       pkgs.cachix
@@ -144,12 +155,12 @@
   # Install firefox.
   programs.firefox.enable = true;
   
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-  };
+  #programs.steam = {
+  #  enable = true;
+  #  remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+  #  dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  #  localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+  #};
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -165,8 +176,8 @@
     hunspellDicts.es_AR
     pkgs.nh
     git
-    pkgs.jetbrains.rider
-    input-leap
+    #pkgs.jetbrains.rider
+    #input-leap
     emacs  # Or emacsGit for latest
     ripgrep
     fd
@@ -180,6 +191,7 @@
     swww
     fuzzel
     clipse
+    wl-clipboard
     cliphist
     yazi
     fzf
@@ -192,8 +204,11 @@
     brightnessctl
     xwayland-satellite
     godot_4
+    grim
+    slurp
+    swappy
     #gomod2nix
-    #gns3-server
+    gns3-server
     #libvirt
     #ubridge
   ];
@@ -215,11 +230,7 @@
     pkgs.icomoon-feather
   ]; 
 
-  services.mopidy = {
-    enable = true;
-    extensionPackages = [ pkgs.mopidy-notify pkgs.mopidy-bandcamp pkgs.mopidy-mpd pkgs.mopidy-iris];
-  };
-  
+   
   services.tailscale.enable = true;
   
   #services.gns3-server = {

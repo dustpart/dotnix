@@ -1,7 +1,10 @@
 { inputs, config, pkgs, ... }:
 
 {
-  imports = [ inputs.ags.homeManagerModules.default ];
+  imports = [ 
+    inputs.ags.homeManagerModules.default 
+    inputs.maomaowm.hmModules.maomaowm
+  ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "nzinni";
@@ -39,13 +42,24 @@
   ];
   services.mako = {
     enable = true;
+    settings.defaultTimeout = 4;
   };
-
+  wayland.windowManager.maomaowm = {
+    enable = true;
+    settings = ''
+      # see config.conf
+      bind=SUPER,Q,quit
+    '';
+    autostart_sh = ''
+      # see autostart.sh
+      # Note: here no need to add shebang
+    '';
+  };
   programs.ags = {
     enable = true;
-
+ 
     # symlink to ~/.config/ags
-    configDir = ../../modules/ags;
+    #configDir = ../../modules/ags;
 
     # additional packages to add to gjs's runtime
     extraPackages = with pkgs; [
@@ -56,7 +70,7 @@
       fzf
     ];
   };  
-
+  
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -68,14 +82,63 @@
       background = [
         {
           monitor = "";
-          path = "/home/nzinni/Imágenes/wallpaper.png";
-          blur_passes = 3;
-          blur_size = 12;
+          path = "/home/nzinni/Imágenes/kanata.png";
+          blur_passes = 1;
+          blur_size = 6;
           noise = "0.1";
-          contrast = "1.3";
-          brightness = "0.2";
+          contrast = "1.0";
+          brightness = "0.8";
           vibrancy = "0.5";
           vibrancy_darkness = "0.3";
+        }
+      ];
+      input-field = [
+        {
+          size = "300, 50";
+          position = "32.5, -470";
+          monitor = "";
+          dots_center = true;
+          fade_on_empty = false;
+          font_color = "rgb(202, 211, 245)";
+          inner_color = "rgb(91, 96, 120)";
+          outer_color = "rgb(24, 25, 38)";
+          outline_thickness = 3;
+          placeholder_text = ''<span foreground="##cad3f5">Password...</span>'';
+          shadow_passes = 2;
+          zindex = 2;
+        }
+      ];
+      shape = [
+        {
+          monitor = "";
+          size = "400, 75";
+          position = "0, -470";
+          color = "rgb(24, 25, 38)";
+          zindex = 1;
+          rounding = -1;
+        }
+      ];
+      label = [
+        {
+          monitor = "";
+          text = "Hi there, Nini";
+          color = "rgba(200, 200, 200, 1.0)";
+          font_size = "25";
+          font_family = "Noto Sans";
+
+          position = "0, -410";
+          halign = "center";
+          valign = "center";
+          zindex = 2;
+        }
+      ];
+      image = [
+        {
+          path = "/home/nzinni/Imágenes/hololive-anime.png";
+          position = "-156.5, -470";
+          size = "50";
+          rounding = -1;
+          zindex = 3;
         }
       ];
     };
@@ -91,23 +154,27 @@
         "XF86AudioLowerVolume".action = spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-";
         "XF86MonBrightnessUp".action = spawn "brightnessctl" "s" "+5%";
         "XF86MonBrightnessDown".action = spawn "brightnessctl" "s" "5%-";
-        "Print".action = spawn "grim" "-g" "$(slurp)" "-" "|" "swappy" "-f" "-";
+        #"Print".action = spawn "grim" "-g" "$(slurp)" "-" "|" "swappy" "-f" "-";
+        #"Print".action = spawn "sh" "c" "grim -g '$(slurp)' - | swappy -f -";
+        "Print".action = screenshot;
         "Mod+D".action = spawn "fuzzel";
         "Mod+Return".action = spawn "ghostty";
         "Mod+1".action = focus-workspace 1;
         "Mod+Shift+E".action = quit { skip-confirmation = true; };
         "Mod+Shift+F".action = toggle-window-floating;
         "Mod+Ctrl+F".action = fullscreen-window;
-        "Mod+Q".action = close-window; 
+        "Mod+Q".action = close-window;
+        "Mod+Shift+Q".action = spawn "hyprlock"; 
       };
       spawn-at-startup = [
+        {command = ["hyprlock"];}
         {command = ["swww-daemon"];}
         {command = ["swww" "img" "/home/nzinni/Imágenes/wallpaper.png"];}
         {command = ["xwayland-satellite" ":12"];}
         {command = ["eww" "daemon"];}
         {command = ["eww" "open" "bar"];}
-        {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
-        {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];} 
+        {command = ["wl-paste" "--watch" "cliphist" "store"];}
+        #{command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];} 
       ];
       outputs = {
         "eDP-1" = {

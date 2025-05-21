@@ -3,15 +3,21 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    
     aagl.url = "github:ezKEa/aagl-gtk-on-nix";
     aagl.inputs.nixpkgs.follows = "nixpkgs"; # Name of nixpkgs input you want to use
+    
     zen-browser.url = "github:youwen5/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
+    
     ags.url = "github:aylur/ags";
+    
+    maomaowm.url = "github:DreamMaoMao/maomaowm/3db1bac8f9d017b1b103ddbfc854789e161f2f8d";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -44,11 +50,12 @@
           modules = [
             ./hosts/nzinni/configuration.nix
             inputs.home-manager.nixosModules.default
+            inputs.maomaowm.nixosModules.maomaowm
             #{
              # home-manager.useGlobalPkgs = true;
              # home-manager.useUserPackages = true;
              # home-manager.users.nzinni = ./hosts/nzinni/home.nix;
-
+               
               # Optionally, use home-manager.extraSpecialArgs to pass
               # arguments to home.nix
             #}
