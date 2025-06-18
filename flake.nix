@@ -14,7 +14,11 @@
     
     zen-browser.url = "github:youwen5/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
-    
+
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     ags.url = "github:aylur/ags";
     
     maomaowm.url = "github:DreamMaoMao/maomaowm/3db1bac8f9d017b1b103ddbfc854789e161f2f8d";

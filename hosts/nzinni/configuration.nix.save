@@ -17,8 +17,13 @@
       inputs.niri.nixosModules.niri      
     ];
 
-  
-  nixpkgs.overlays = [ inputs.niri.overlays.niri ];
+  #security.wrappers.ubridge = {
+  #  source = "${pkgs.ubridge}/bin/ubridge";
+  #  capabilities = "cap_net_admin,cap_net_raw=ep";
+  #  owner = "root";
+  #  group = "root";  # or whatever group your user belongs to
+  #};
+  #nixpkgs.overlays = [ inputs.niri.overlays.niri ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -27,7 +32,7 @@
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  #programs.coolercontrol.enable = true;
+  programs.coolercontrol.enable = true;
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -56,24 +61,14 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-  services.sunshine = {
-    enable = true;
-    autoStart = true;
-    capSysAdmin = true;
-    openFirewall = true;  
-  };
   services.cage.enable = true;
   services.greetd = {
     enable = true;
-    #settings = {
-    #  default_session = {
-    #  command = "cage -s -mlast -- regreet";
-    #  user = "greeter";
-    #};
-    #};
+    
   };
-  #services.power-profiles-daemon.enable = true;  
   programs.regreet.enable = true;
+  #services.displayManager.autoLogin.enable = true;
+  #services.displayManager.autoLogin.user = "nzinni";
   services.displayManager.sddm.enable = false;
   services.desktopManager.plasma6.enable = true;
   programs.hyprland = {
@@ -82,14 +77,14 @@
   };
   programs.maomaowm.enable = true;
   programs.niri.enable = true;
-  programs.niri.package = pkgs.niri-unstable;
+  programs.niri.package = pkgs.niri;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   # Configure keymap in X11
   services.xserver = {
     xkb.layout = "latam";
     xkb.variant = "";
   };
-  services.lorri.enable = true;
+
   # Configure console keymap
   console.keyMap = "la-latin1";
 
@@ -98,7 +93,7 @@
 
   # Enable sound with pipewire.
   #sound.enable = true;
-  #services.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.pam.services.hyprlock.text = "auth include login";
   security.rtkit.enable = true;
   services.pipewire = {
@@ -117,6 +112,15 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
  
+   virtualisation = { 
+     docker.enable = true;
+     virtualbox.host = {
+       enable = false;
+       #enableKvm = true;
+       enableExtensionPack = true;
+       enableWebService = true;
+     };
+   };
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.nzinni = {
     isNormalUser = true;
@@ -124,12 +128,17 @@
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
       #rustdesk
-      moonlight-qt
+      caido
+      direnv
       mysql-workbench
       pkgs.cachix
       kdePackages.kate
       bottles
+      tidal-hifi
       kalker
+      calcure
+      ipcalc
+      speedcrunch
       bottles
       gns3-gui
       inputs.zen-browser.packages.${pkgs.system}.default
@@ -138,6 +147,7 @@
       rust-analyzer
       #ciscoPacketTracer8
       ghostty
+     #  thunderbird
     ];
   };
   users.users.greeter = {
@@ -172,21 +182,14 @@
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   #  pkgs.sony-headphones-client
-    caido
-    php84
-    php84Packages.composer
-    filezilla
-    wayvnc
     spotify
-    inputs.quickshell.packages.${pkgs.system}.default
-    gnumake
-    nodejs
     libreoffice-qt
     hunspell
     hunspellDicts.es_AR
     pkgs.nh
     git
-    pkgs.direnv
+    #pkgs.jetbrains.rider
+    #input-leap
     emacs  # Or emacsGit for latest
     ripgrep
     fd
@@ -208,11 +211,16 @@
     imagemagick
     zoxide
     ffmpeg
+    networkmanagerapplet
     iwd
     brightnessctl
     xwayland-satellite
     godot_4
+    grim
+    slurp
+    swappy
     #gomod2nix
+    gns3-server
     #libvirt
     #ubridge
   ];
@@ -233,9 +241,24 @@
     pkgs.comic-mono
     pkgs.icomoon-feather
   ]; 
+
    
   services.tailscale.enable = true;
   
+  #services.gns3-server = {
+    #enable = true;
+    #dynamips.enable = true;
+    #ubridge.enable = true;
+    #vpcs.enable = true;
+    #settings = {
+    #  host = "127.0.0.1";
+    #  port = 3080;
+    #};
+ # };
+
+  #services.n8n = {
+   # enable = true;
+  #};
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -247,7 +270,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  # services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

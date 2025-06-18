@@ -134,7 +134,7 @@
       ];
       image = [
         {
-          path = "/home/nzinni/Imágenes/hololive-anime.png";
+          path = "/home/nzinni/Imágenes/hololive-anime.jpg";
           position = "-156.5, -470";
           size = "50";
           rounding = -1;
@@ -164,14 +164,16 @@
         "Mod+Shift+F".action = toggle-window-floating;
         "Mod+Ctrl+F".action = fullscreen-window;
         "Mod+Q".action = close-window;
-        "Mod+Shift+Q".action = spawn "hyprlock"; 
+        "Mod+Shift+Q".action = spawn "hyprlock";
+        "Mod+Tab".action= toggle-overview; 
       };
       spawn-at-startup = [
-        {command = ["hyprlock"];}
+        #{command = ["hyprlock"];}
         {command = ["swww-daemon"];}
         {command = ["swww" "img" "/home/nzinni/Imágenes/wallpaper.png"];}
+        {command = ["quickshell" "-p" "/home/nzinni/Zaphkiel/users/Configs/quickshell/kurukurubar"];}
         {command = ["xwayland-satellite" ":12"];}
-        {command = ["eww" "daemon"];}
+        #{command = ["eww" "daemon"];}
         {command = ["eww" "open" "bar"];}
         {command = ["wl-paste" "--watch" "cliphist" "store"];}
         #{command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];} 
