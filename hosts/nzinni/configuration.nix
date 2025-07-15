@@ -121,7 +121,7 @@
   users.users.nzinni = {
     isNormalUser = true;
     description = "Nicolás Zinni";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "adbusers" ];
     packages = with pkgs; [
       #rustdesk
       moonlight-qt
@@ -156,7 +156,7 @@
   };
   # Install firefox.
   programs.firefox.enable = true;
-  
+  programs.adb.enable = true;
   #programs.steam = {
   #  enable = true;
   #  remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play

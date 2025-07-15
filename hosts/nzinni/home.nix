@@ -2,7 +2,7 @@
 
 {
   imports = [ 
-    inputs.ags.homeManagerModules.default 
+    # inputs.ags.homeManagerModules.default 
     inputs.maomaowm.hmModules.maomaowm
   ];
   # Home Manager needs a bit of information about you and the paths it should
@@ -56,7 +56,7 @@
     '';
   };
   programs.ags = {
-    enable = true;
+    enable = false;
  
     # symlink to ~/.config/ags
     #configDir = ../../modules/ags;
